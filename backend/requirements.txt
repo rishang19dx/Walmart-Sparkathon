@@ -4,3 +4,4 @@ langchain
 ollama
 httpx
 python-dotenv
+langchain-community
