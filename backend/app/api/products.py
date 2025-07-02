@@ -1,5 +1,7 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Body
 from typing import List, Dict, Any
+from ..models.product import Product
+from ..services.pinecone_service import upsert_product_vector, query_product_vectors
 
 # This will be our mock database for now.
 # In Week 2, this will be replaced by Pinecone and a real database.
@@ -48,3 +50,35 @@ async def get_product_by_id(product_id: str) -> Dict[str, Any]:
         if product["product_id"] == product_id:
             return product
     raise HTTPException(status_code=404, detail="Product not found")
+
+@router.post("/products", tags=["Products"])
+async def create_product(product: Product):
+    MOCK_PRODUCTS.append(product.dict())
+    # For demo, use a dummy vector (should use real embedding in production)
+    vector = [0.0] * 384
+    upsert_product_vector(product.product_id, vector, product.dict())
+    return product
+
+@router.put("/products/{product_id}", tags=["Products"])
+async def update_product(product_id: str, product: Product):
+    for idx, p in enumerate(MOCK_PRODUCTS):
+        if p["product_id"] == product_id:
+            MOCK_PRODUCTS[idx] = product.dict()
+            vector = [0.0] * 384
+            upsert_product_vector(product.product_id, vector, product.dict())
+            return product
+    raise HTTPException(status_code=404, detail="Product not found")
+
+@router.delete("/products/{product_id}", tags=["Products"])
+async def delete_product(product_id: str):
+    for idx, p in enumerate(MOCK_PRODUCTS):
+        if p["product_id"] == product_id:
+            del MOCK_PRODUCTS[idx]
+            return {"detail": "Product deleted"}
+    raise HTTPException(status_code=404, detail="Product not found")
+
+@router.post("/products/search", tags=["Products"])
+async def search_products(query_vector: list = Body(...)):
+    # In production, generate vector from query text using embedding model
+    results = query_product_vectors(query_vector)
+    return results
