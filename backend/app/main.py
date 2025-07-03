@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from .api import products, chat, users, weather # Import the new routers
+from app.api import did  # Import the new DID router
 
 app = FastAPI(
     title="Sparkathon API",
@@ -11,6 +12,7 @@ app = FastAPI(
 app.include_router(products.router, prefix="/api")
 app.include_router(chat.router, prefix="/api")
 app.include_router(weather.router, prefix="/api")
+app.include_router(did.router)  # Register the DID router
 
 @app.get("/", tags=["Root"])
 async def read_root():

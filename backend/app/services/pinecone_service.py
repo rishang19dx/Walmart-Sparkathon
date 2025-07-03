@@ -1,18 +1,23 @@
-import pinecone
-import os
 from typing import List, Dict, Any
+import os
+from pinecone import Pinecone
 
-PINECONE_API_KEY = os.getenv("PINECONE_API_KEY", "")
-PINECONE_ENV = os.getenv("PINECONE_ENV", "us-west1-gcp")
-PINECONE_INDEX = os.getenv("PINECONE_INDEX", "products-index")
+pc = Pinecone(api_key=os.environ.get("PINECONE_API_KEY"))
 
-pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
+index_name = "developer-quickstart-py"
 
-# Ensure index exists
-if PINECONE_INDEX not in pinecone.list_indexes():
-    pinecone.create_index(PINECONE_INDEX, dimension=384)  # Adjust dimension as needed
+if not pc.has_index(index_name):
+    pc.create_index_for_model(
+        name=index_name,
+        cloud="aws",
+        region="us-east-1",
+        embed={
+            "model": "llama-text-embed-v2",
+            "field_map": {"text": "chunk_text"}
+        }
+    )
 
-index = pinecone.Index(PINECONE_INDEX)
+index = pc.Index(index_name)
 
 def upsert_product_vector(product_id: str, vector: List[float], metadata: Dict[str, Any]):
     index.upsert([(product_id, vector, metadata)])
