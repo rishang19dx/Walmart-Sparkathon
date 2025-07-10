@@ -1,8 +1,7 @@
-from pydantic import BaseModel
-from datetime import datetime
+from sqlmodel import SQLModel, Field
+from typing import Optional
 
-class Session(BaseModel):
-    session_id: str
+class Session(SQLModel, table=True):
+    session_id: str = Field(primary_key=True)
     user_id: str
-    created_at: datetime
-    is_active: bool = True 
+    created_at: Optional[str] = None 
