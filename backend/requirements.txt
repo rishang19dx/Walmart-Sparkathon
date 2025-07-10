@@ -6,4 +6,8 @@ httpx
 python-dotenv
 didkit
 langchain-community
-pinecone
+sqlmodel
+eth-account
+sentence-transformers
+openai-whisper
+gtts

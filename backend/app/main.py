@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from .api import products, chat, users, weather # Import the new routers
-from app.api import did  # Import the new DID router
+from sqlmodel import SQLModel
+from app.models.db import engine
+from app.models import user, session, consent
+
 
 app = FastAPI(
     title="Sparkathon API",
@@ -28,3 +31,8 @@ API Endpoints:
 - /api/sessions: Session management
 - /api/chat: Chat endpoints
 """
+
+def init_db():
+    SQLModel.metadata.create_all(engine)
+
+init_db()
