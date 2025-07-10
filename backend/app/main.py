@@ -4,6 +4,7 @@ from sqlmodel import SQLModel
 from app.models.db import engine
 from app.models import user, session, consent
 
+
 app = FastAPI(
     title="Sparkathon API",
     description="API for the AI-powered personal shopping assistant with an AR-based virtual try-on system.",
@@ -14,6 +15,7 @@ app = FastAPI(
 app.include_router(products.router, prefix="/api")
 app.include_router(chat.router, prefix="/api")
 app.include_router(weather.router, prefix="/api")
+app.include_router(did.router)  # Register the DID router
 
 @app.get("/", tags=["Root"])
 async def read_root():

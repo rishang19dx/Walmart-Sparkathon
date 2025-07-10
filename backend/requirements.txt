@@ -4,7 +4,6 @@ langchain
 ollama
 httpx
 python-dotenv
-pinecone-client
 didkit
 langchain-community
 sqlmodel
