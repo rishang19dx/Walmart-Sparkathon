@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Chat from './assets/chat.svg';
-import Mic from './assets/mic.svg'; // Your mic icon
+import Mic from './assets/mic.svg';
 
-function FloatingChatbox() {
+function FloatingChatbox({ user }) {
     const [isOpen, setIsOpen] = useState(false);
     const [showPrompt, setShowPrompt] = useState(true);
     const [messages, setMessages] = useState([]);
@@ -16,7 +16,7 @@ function FloatingChatbox() {
     }, []);
 
     const handleSendMessage = async () => {
-        if (!input.trim()) return;
+        if (!input.trim() || !user) return;
         const userMessage = { sender: "user", text: input };
         setMessages(prev => [...prev, userMessage]);
 
@@ -25,7 +25,7 @@ function FloatingChatbox() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    user_id: "your_user_id_here", // Replace with actual user id from login/auth
+                    user_id: user.id,
                     query: input
                 })
             });
@@ -39,6 +39,9 @@ function FloatingChatbox() {
 
         setInput("");
     };
+
+    // Only show chat for onboarded users
+    if (!user) return null;
 
     return (
         <>

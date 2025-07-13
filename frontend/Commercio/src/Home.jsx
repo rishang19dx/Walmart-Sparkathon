@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Homecard from './Homecard';
 import Homeimg01 from './assets/homeimg01.png';
 import Homeimg02 from './assets/homeimg02.png';
@@ -43,7 +43,6 @@ function Home() {
   Shop Now
 </Link>
 
-
         <div className='flex gap-5'>
           <Homecard title="200+" content="International Brands" />
           <Homecard title="2,000+" content="High-Quality Products" />
@@ -53,23 +52,20 @@ function Home() {
 
       <div className='flex-1 h-full overflow-hidden relative flex items-center justify-center'>
         <div className='w-full h-full relative'>
-          <AnimatePresence initial={false} custom={direction}>
-            <motion.img
-              key={index}
-              src={images[index]}
-              alt={`Slide ${index + 1}`}
-              custom={direction}
-              initial={{ opacity: 0, x: direction > 0 ? 100 : -100 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: direction > 0 ? -100 : 100 }}
-              transition={{
-                x: { type: 'tween', duration: 0.5 },
-                opacity: { duration: 0.25 }  // ⬅️ Faster fade-out
-              }}
-              className='absolute w-full h-full object-contain'
-            />
-
-          </AnimatePresence>
+          <motion.img
+            key={index}
+            src={images[index]}
+            alt={`Slide ${index + 1}`}
+            custom={direction}
+            initial={{ opacity: 0, x: direction > 0 ? 100 : -100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: direction > 0 ? -100 : 100 }}
+            transition={{
+              x: { type: 'tween', duration: 0.5 },
+              opacity: { duration: 0.25 }
+            }}
+            className='absolute w-full h-full object-contain'
+          />
         </div>
       </div>
     </div>

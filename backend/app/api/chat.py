@@ -3,11 +3,6 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from app.services.ollama_service import get_ollama_response
 from app.services.pinecone_service import query_product_vectors
-#from ..models.session import Session as SessionModel
-#from ..models.db import get_session
-#from ..models.user import User
-#from ..models.consent import Consent
-#from sqlmodel import Session
 from datetime import datetime
 from typing import Dict, Any
 from sentence_transformers import SentenceTransformer
@@ -64,7 +59,7 @@ async def chat_endpoint(request: ChatQuery):
 
         # Generate real embedding for the user's query
         query_embedding = embedding_model.encode(request.query).tolist()
-        pinecone_results = query_product_vectors(query_embedding, top_k=3)
+        pinecone_results = query_product_vectors(request.query, top_k=3)
         products = [match["metadata"] for match in pinecone_results]
 
         # Construct prompt

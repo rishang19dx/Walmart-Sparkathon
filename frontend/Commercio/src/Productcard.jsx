@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Star from './assets/star.svg';
 import SizeFinderModal from './SizeFinderModal';
+import { WalletModalContext } from './App';
 
 function Productcard(props) {
   const [modalOpen, setModalOpen] = useState(false);
   const [recommendedSize, setRecommendedSize] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [dimensions, setDimensions] = useState(null);
+  const { user, openWalletModal } = useContext(WalletModalContext);
 
   const handleSizeSubmit = ({ size, sizeCm }) => {
     setRecommendedSize(size);
@@ -15,6 +17,32 @@ function Productcard(props) {
   };
 
   const sizes = ['Small', 'Medium', 'Large', 'X-Large'];
+
+  const handleAddToCart = () => {
+    if (!user) {
+      openWalletModal();
+      return;
+    }
+    if (!selectedSize) {
+      alert('Please select a size before adding to cart.');
+      return;
+    }
+    // Cart logic
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const existing = cart.find(item => item.name === props.name && item.size === selectedSize);
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cart.push({
+        name: props.name,
+        price: props.price,
+        size: selectedSize,
+        quantity: 1
+      });
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert('Added to cart!');
+  };
 
   return (
     <div className='bg-zinc-300 md:gap-20 p-3 flex flex-col md:flex-row md:justify-around justify-center border-b-2'>
@@ -97,7 +125,7 @@ function Productcard(props) {
 
         <hr className='w-full text-zinc-400 mt-5' />
 
-        <div className='text-white bg-black px-5 py-3 items-center justify-center flex rounded-3xl mt-5 cursor-pointer'>
+        <div className='text-white bg-black px-5 py-3 items-center justify-center flex rounded-3xl mt-5 cursor-pointer' onClick={handleAddToCart}>
           Add to Cart
         </div>
       </div>
