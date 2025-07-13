@@ -1,4 +1,3 @@
-// src/ProductsPage.jsx
 import React, { useEffect, useState } from 'react';
 import ProductCard from './Productcard';
 import Tshirt from './assets/t-shirt.jpg';
@@ -38,7 +37,7 @@ const mockProducts = [
 
 
 function ProductsPage() {
-  const [products, setProducts] = useState(mockProducts);  // show mock until backend confirms real
+  const [products, setProducts] = useState(mockProducts);
 
   useEffect(() => {
     fetch("http://localhost:8000/products")
@@ -58,22 +57,23 @@ function ProductsPage() {
       })
       .catch(error => {
         console.error("Error fetching products:", error);
-        // Do nothing because mock data is already in place
       });
   }, []);
 
 
   return (
-    <div className="flex flex-wrap justify-start w-full bg-zinc-300 gap-4 p-4">
-      {products.map((product, index) => (
-        <ProductCard
-          key={index}
-          link={Tshirt}
-          name={product.name}
-          description={product.description}
-          price={product.price}
-        />
-      ))}
+    <div className="relative w-full">
+      <div className="flex flex-wrap justify-start w-full bg-zinc-300 gap-4 p-4">
+        {products.map((product, index) => (
+          <ProductCard
+            key={index}
+            link={Tshirt}
+            name={product.name}
+            description={product.description}
+            price={product.price}
+          />
+        ))}
+      </div>
     </div>
   );
 }
