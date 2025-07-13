@@ -2,8 +2,7 @@ import React from 'react'
 import Navbar from './Navbar'
 import Mainhome from './Mainhome'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Productcard from './Productcard';
-import Tshirt from './assets/t-shirt.jpg';
+import ProductsPage from './ProductsPage';
 
 function App() {
   return (
@@ -12,7 +11,7 @@ function App() {
         <Navbar /> 
         <Routes>
           <Route path="/" element={<Mainhome />} />
-          <Route path="/products" element={<Productcard link={Tshirt} />} />
+          <Route path="/products" element={<ProductsPage />} />
         </Routes>
       </Router>
     </div>
