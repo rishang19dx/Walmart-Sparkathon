@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // ✅ import navigation hook
 import Search from './assets/search.svg';
 import Heart from './assets/heart.svg';
 import Cart from './assets/cart.svg';
@@ -7,6 +8,7 @@ import DD from './assets/dropdown.svg';
 
 function Navbar() {
     const [query, setQuery] = useState('');
+    const navigate = useNavigate(); // ✅ hook for navigation
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -16,8 +18,9 @@ function Navbar() {
     return (
         <div className='w-screen h-20 bg-white flex items-center justify-around border-2 border-gray-500'>
             <div className='text-3xl font-bold cursor-pointer'>Commercio</div>
+
             <div className='flex gap-15'>
-                <div className='cursor-pointer'>Home</div>
+                <div className='cursor-pointer' onClick={() => navigate('/')}>Home</div>
                 <div className='cursor-pointer'>On Sale</div>
                 <div className='cursor-pointer'>New Arrivals</div>
                 <div className='cursor-pointer'>Brands</div>
@@ -45,12 +48,16 @@ function Navbar() {
             </div>
 
             <div className='flex bg-white rounded-3xl pl-0.5 pr-2 items-center gap-3 cursor-pointer h-9.5 shadow-md border-1 border-gray-600'>
-                <div className='h-8 w-8 rounded-full bg-red-800 flex items-center justify-center'> <img src={Avatar} className='h-full' /></div>
+                <div className='h-8 w-8 rounded-full bg-red-800 flex items-center justify-center'>
+                    <img src={Avatar} className='h-full' />
+                </div>
                 <div className='text-gray-800 text-sm font-medium'>Harshit</div>
-                <div><img src={DD} className='h-8' /></div>
+                <div>
+                    <img src={DD} className='h-8' />
+                </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default Navbar
+export default Navbar;
