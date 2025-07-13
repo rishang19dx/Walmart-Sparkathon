@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // ✅ import navigation hook
 import Search from './assets/search.svg';
-import Chat from './assets/chat.svg';
+import Heart from './assets/heart.svg';
 import Cart from './assets/cart.svg';
 import Avatar from './assets/avatar.svg';
 import DD from './assets/dropdown.svg';
@@ -43,7 +43,7 @@ function Navbar() {
             </div>
 
             <div className='flex gap-3'>
-                <img src={Chat} className='h-7 cursor-pointer' />
+                <img src={Heart} className='h-7 cursor-pointer' />
                 <img src={Cart} className='h-7 cursor-pointer' />
             </div>
 
