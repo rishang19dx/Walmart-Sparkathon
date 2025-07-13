@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Body
 from typing import List, Dict, Any
 from ..models.product import Product
 from ..services.pinecone_service import upsert_product_vector, query_product_vectors
+from app.services.pinecone_service import query_product_vectors
 
 # This will be our mock database for now.
 # In Week 2, this will be replaced by Pinecone and a real database.
@@ -82,3 +83,12 @@ async def search_products(query_vector: list = Body(...)):
     # In production, generate vector from query text using embedding model
     results = query_product_vectors(query_vector)
     return results
+
+@router.get("/search")
+def search_products(query: str):
+    results = query_product_vectors(query)
+    return {"results": results}
+
+@router.get("/test")
+def test():
+    return {"msg": "Product route works"}
