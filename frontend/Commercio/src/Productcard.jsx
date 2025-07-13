@@ -17,7 +17,7 @@ function Productcard(props) {
   const sizes = ['Small', 'Medium', 'Large', 'X-Large'];
 
   return (
-    <div className='bg-zinc-300 p-3 flex flex-col md:flex-row md:justify-around justify-center h-screen'>
+    <div className='bg-zinc-300 md:gap-20 p-3 flex flex-col md:flex-row md:justify-around justify-center border-b-2'>
       <SizeFinderModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSubmit={handleSizeSubmit} />
 
       <div className='md:flex md:gap-3'>
@@ -37,8 +37,8 @@ function Productcard(props) {
         </div>
       </div>
 
-      <div>
-        <div className='text-2xl mt-3 font-extrabold'>One Life Graphic T-shirt</div>
+      <div className='md:w-150'>
+        <div className='text-2xl mt-3 font-extrabold'>{props.name}</div>
 
         <div className='flex items-center'>
           {[...Array(4)].map((_, i) => <img key={i} src={Star} className='h-5' />)}
@@ -46,10 +46,10 @@ function Productcard(props) {
           <div className='text-base text-zinc-600'>/5</div>
         </div>
 
-        <div className='text-xl font-bold mt-3'>$260</div>
+        <div className='text-xl font-bold mt-3'>${props.price}</div>
 
         <div className='text-xs text-zinc-600 mt-3'>
-          This graphic T-shirt is perfect for any occasion. Crafted from a soft and breathable fabric, it offers superior comfort and style.
+          {props.description}
         </div>
 
         <hr className='w-full text-zinc-400 mt-5' />
@@ -82,22 +82,22 @@ function Productcard(props) {
           </div>
 
           {recommendedSize && (
-  <div className='mt-2 text-sm text-green-600 font-semibold'>
-    Recommended Size: {recommendedSize}
-    {dimensions && (
-      <span className='text-xs block text-zinc-500 mt-1'>
-        Shoulder: {dimensions.shoulderCm.toFixed(1)} cm,
-        Waist: {dimensions.hipCm.toFixed(1)} cm
-      </span>
-    )}
-  </div>
-)}
+            <div className='mt-2 text-sm text-green-600 font-semibold'>
+              Recommended Size: {recommendedSize}
+              {dimensions && (
+                <span className='text-xs block text-zinc-500 mt-1'>
+                  Shoulder: {dimensions.shoulderCm.toFixed(1)} cm,
+                  Waist: {dimensions.hipCm.toFixed(1)} cm
+                </span>
+              )}
+            </div>
+          )}
 
         </div>
 
         <hr className='w-full text-zinc-400 mt-5' />
 
-        <div className='text-white bg-black px-5 py-3 items-center justify-center flex rounded-3xl mt-5'>
+        <div className='text-white bg-black px-5 py-3 items-center justify-center flex rounded-3xl mt-5 cursor-pointer'>
           Add to Cart
         </div>
       </div>
