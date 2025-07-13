@@ -3,11 +3,11 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from app.services.ollama_service import get_ollama_response
 from app.services.pinecone_service import query_product_vectors
-from ..models.session import Session as SessionModel
-from ..models.db import get_session
-from ..models.user import User
-from ..models.consent import Consent
-from sqlmodel import Session
+#from ..models.session import Session as SessionModel
+#from ..models.db import get_session
+#from ..models.user import User
+#from ..models.consent import Consent
+#from sqlmodel import Session
 from datetime import datetime
 from typing import Dict, Any
 from sentence_transformers import SentenceTransformer
@@ -16,6 +16,11 @@ from gtts import gTTS
 import os
 import httpx
 
+from app.models.db import get_collection
+
+def get_user_by_email(email: str):
+    users = get_collection("users")
+    return users.find_one({"email": email})
 # In-memory cache for Ceramic profiles (keyed by user_id)
 ceramic_profile_cache = {}
 
@@ -35,14 +40,17 @@ embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 whisper_model = whisper.load_model("base")
 
 @router.post("/chat", response_model=ChatResponse)
-async def chat_endpoint(request: ChatQuery, session: Session = Depends(get_session)):
+async def chat_endpoint(request: ChatQuery):
     try:
         # Fetch user and consent from DB
-        user = session.get(User, request.user_id)
+        users = get_collection("users")
+        user = users.find_one({"_id": request.user_id})
+
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
-        consent = session.get(Consent, request.user_id)
-        if not consent or consent.status != "granted":
+        consents = get_collection("consents")
+        consent = consents.find_one({"user_id": request.user_id})
+        if not consent or not consent.get("given", False):
             raise HTTPException(status_code=403, detail="Consent not granted")
 
         # Fetch and cache Ceramic profile if not already cached for this user
@@ -68,7 +76,7 @@ async def chat_endpoint(request: ChatQuery, session: Session = Depends(get_sessi
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/chat/voice", response_model=ChatResponse)
-async def chat_voice(user_id: str, file: UploadFile = File(...), session: Session = Depends(get_session)):
+async def chat_voice(user_id: str, file: UploadFile = File(...)):
     # Save uploaded audio file temporarily
     audio_path = f"/tmp/{file.filename}"
     with open(audio_path, "wb") as f:
@@ -79,7 +87,8 @@ async def chat_voice(user_id: str, file: UploadFile = File(...), session: Sessio
     if isinstance(text, list):
         text = " ".join(text)
     # Call the main chat endpoint with the transcribed text
-    return await chat_endpoint(ChatQuery(query=text, user_id=user_id), session)
+    return await chat_endpoint(ChatQuery(query=text, user_id=user_id))
+
 
 @router.get("/chat/tts")
 async def chat_tts(text: str):

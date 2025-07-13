@@ -1,10 +1,12 @@
-from sqlmodel import SQLModel, create_engine, Session
-from contextlib import contextmanager
+# app/models/db.py
 
-DATABASE_URL = "sqlite:///./app.db"
-engine = create_engine(DATABASE_URL, echo=True)
+from pymongo import MongoClient
+from app.core.config import settings 
 
-# Dependency for FastAPI endpoints
-def get_session():
-    with Session(engine) as session:
-        yield session 
+# Create MongoDB client and access the database
+client = MongoClient(settings.MONGO_URI)
+db = client[settings.DB_NAME]
+
+# Optional helper to get a collection
+def get_collection(name: str):
+    return db[name]

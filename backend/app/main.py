@@ -3,6 +3,9 @@ from .api import products, chat, users, weather # Import the new routers
 from sqlmodel import SQLModel
 from app.models.db import engine
 from app.models import user, session, consent
+from app.api import products
+from app.api import did
+
 
 
 app = FastAPI(
@@ -16,7 +19,7 @@ app.include_router(products.router, prefix="/api")
 app.include_router(chat.router, prefix="/api")
 app.include_router(weather.router, prefix="/api")
 app.include_router(did.router)  # Register the DID router
-
+app.include_router(products.router)
 @app.get("/", tags=["Root"])
 async def read_root():
     """
