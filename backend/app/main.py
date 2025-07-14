@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from .api import products, chat, users, weather # Import the new routers
 from sqlmodel import SQLModel
-from app.models.db import engine
+from app.models.db import sql_engine
 from app.models import user, session, consent
 from app.api import products
 from app.api import did
+from fastapi.middleware.cors import CORSMiddleware
 
 
 
@@ -12,6 +13,15 @@ app = FastAPI(
     title="Sparkathon API",
     description="API for the AI-powered personal shopping assistant with an AR-based virtual try-on system.",
     version="0.1.0"
+)
+
+# CORS middleware block (no extra indent)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Or ["*"] for all origins (less secure)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Include the routers from your api files
@@ -36,6 +46,6 @@ API Endpoints:
 """
 
 def init_db():
-    SQLModel.metadata.create_all(engine)
+    SQLModel.metadata.create_all(sql_engine)
 
 init_db()
